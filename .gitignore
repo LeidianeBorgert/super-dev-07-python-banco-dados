@@ -1,0 +1,91 @@
+
+#Gerar um gitignore para um projeto em python
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Arquivos de log
+*.log
+
+# Ambiente virtual
+.venv/
+venv/
+env/
+
+# Distribuição / Empacotamento
+build/
+dist/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Pytest
+.cache/
+.pytest_cache/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Coverage
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+cov_html/
+
+# Pydantic / HuggingFace cache
+.cache/
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+staticfiles/
+media/
+
+# Flask
+instance/
+.webassets-cache
+
+# FastAPI / Uvicorn
+*.sqlite3
+
+# VSCode / IDEs
+.vscode/
+.idea/
+*.swp
+
+# Arquivos sensíveis
+.env
+*.env
+.env.*
+
+# Outras pastas temporárias
+tmp/
+temp/
+
+env/
