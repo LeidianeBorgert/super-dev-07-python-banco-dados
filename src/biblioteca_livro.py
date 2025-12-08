@@ -1,4 +1,5 @@
-from mysql.connector import connect
+from src.banco_dados import conectar
+from src.repositorios import biblioteca_livro_repositorio
 
 
 #my sql: Criar um novo banco de dados de biblioteca
@@ -16,61 +17,39 @@ from mysql.connector import connect
 
 
 def cadastrar():
-    #cadastrar_livro()
-    #listar_livros()
-    editar_livros()
+    cadastrar_livro()
+    listar_livros()
+    #editar_livros()
     #apagar_livro()
 
 def cadastrar_livro():
     titulo = input("Informe o titulo do livro que deseja cadastrar: ")
-    quantidade_paginas = input("Informe a quantidade de páginas do livro que deseja cadastrar: ")
+    quantidade_paginas = input("Informe a quantidade de páginas " \
+    "do livro que deseja cadastrar: ")
+    autor = input("Informe o autor do livro que deseja cadastrar: ") 
+    preco = input("Informe o preço do livro que deseja cadastrar: R$ ") 
+    isbn = input("Informe a ISBN do livro que deseja cadastrar: ") 
+    descricao = input("Informe a descrição do livro que deseja cadastrar: ") 
 
-    print("Abrindo conexão com o banco de dados")
 
-    conexao = connect(
-        user = "root",
-        password = "admin",
-        port = "3306",
-        host = "127.0.0.1",
-        database = "biblioteca"
-    )
-
-    cursor = conexao.cursor()
-
-    sql = "INSERT INTO livros (titulo,quantidade_paginas) VALUES (%s,%s)"
-    dados = (titulo,quantidade_paginas)
-    cursor.execute(sql,dados)
-
-    conexao.commit()
-
-    cursor.close()
+    biblioteca_livro_repositorio.cadastrar(titulo,quantidade_paginas,autor,preco,isbn,descricao)
 
     print("Livro cadastrado  com sucesso")
 
 def listar_livros():
+    livros = biblioteca_livro_repositorio.obter_todos()
 
-    conexao = connect(
-        user = "root",
-        password = "admin",
-        port = "3306",
-        host = "127.0.0.1",
-        database = "biblioteca"
-    )
-
-    cursor = conexao.cursor()
-
-    cursor.execute("SELECT id,titulo,quantidade_paginas FROM livros")
-
-    registros = cursor.fetchall()
-
-    cursor.close()
-    conexao.close()
-
-    for registro in registros:
-        id = registro[0]
-        titulo = registro[1]
-        quantidade_paginas = registro[2]
-        print("ID:", id, "\tTITULO:",titulo, "\tPÁGINAS:",quantidade_paginas)
+    for livro in livros:
+        id = livro["id"]
+        titulo = livro["titulo"]
+        quantidade_paginas = livro["quantidade_paginas"]
+        autor = livro["autor"]
+        preco = livro["preco"]
+        isbn = livro["isbn"]
+        descricao = livro["descricao"]
+        print("ID:", id, "\tTITULO:",titulo, "\tPÁGINAS:",quantidade_paginas,
+              "\tAUTOR:",autor,"\tpreco:R$",preco,"\tISBN:",isbn,
+              "\tDESCRIÇÃO:",descricao,)
 
 def editar_livros():
     listar_livros()
@@ -79,27 +58,13 @@ def editar_livros():
     titulo  = input("Digite o novo titulo: ")
     quantidade_paginas = input("Informe a nova quantidade de páginas " \
     "do livro que deseja cadastrar: ")
+    autor = input("Digite o novo autor do livro que deseja cadastrar: ") 
+    preco = input("Digite o novo preço do livro que deseja cadastrar: R$ ") 
+    isbn = input("Digite a nova ISBN do livro que deseja cadastrar: ") 
+    descricao = input("Digite a nova descrição do livro que deseja cadastrar: ") 
     
-    conexao = connect(
-        user = "root",
-        password = "admin",
-        port = "3306",
-        host = "127.0.0.1",
-        database = "biblioteca",
-    )
-
-    cursor = conexao.cursor()
-
-    sql = "UPDATE livros SET titulo = %s, quantidade_paginas = %s WHERE id = %s"
-    dados = (titulo,quantidade_paginas, id)
-
-    cursor.execute(sql,dados)
-    
-    conexao.commit()
-
-    cursor.close()
-
-    conexao.close()
+    biblioteca_livro_repositorio.editar(id,titulo,quantidade_paginas,
+                                        autor,preco,isbn,descricao)
 
     print("Livro alterado com sucesso")
 def apagar_livro():
@@ -107,35 +72,11 @@ def apagar_livro():
 
     id = input("Digite o id que deseja apagar: ")
 
-    print("Abrindo conexão com bd")
+    linhas_afetadas = biblioteca_livro_repositorio.apagar(id)
 
-    conexao = connect(
-        host = "127.0.0.1",
-        port = "3306",
-        user = "root",
-        password = "admin",
-        database = "biblioteca",
-        
-    )
-    
-    print("Conexão aberta com sucesso")
-    cursor = conexao.cursor()
-
-    print("Apagando livros")
-
-    sql = "DELETE FROM livros WHERE id = %s"
-    dados = (id,)
-
-    cursor.execute(sql,dados)
-
-    conexao.commit()
-
-    linhas_afetadas = cursor.rowcount
     if linhas_afetadas == 0:
         print("ID informado inexistente, tente novamente")
     else:
          print("Livro apagada com sucesso")
 
-    cursor.close()
-    conexao.close()
 
